@@ -1,0 +1,13 @@
+//Componentes do TanQuery
+import { QueryClient, QueryClientProvider as TanstackProvider } from "@tanstack/react-query";
+
+//Cia um instacia do QueryClient (controlar error, loading, etc)
+const queryClient = new QueryClient()
+
+export default function QueryClientProvider({children}){
+    return(
+        <TanstackProvider client={queryClient}>
+            {children}
+        </TanstackProvider>
+        )
+    }
