@@ -1,13 +1,15 @@
-import { View, Text, StyleSheet, FlatList, ActivityIndicator } from 'react-native'
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { fetchUsers, createUser } from './api/api'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function HomeScreen() {
-    const { data, isLoading, isError, error, isFetching, refetch } = useQuery({
-        queryKey: ['users'],
-        queryFn: fetchUsers
-    })
+   const { data, isLoading, isError, error, isFetching, refetch } = useQuery({
+    queryKey: ['users'],
+    queryFn: fetchUsers,
+    cacheTime: 0,
+    staleTime: 0
+})
 
     const mutation = useMutation({
         mutationFn: createUser,
@@ -29,6 +31,14 @@ export default function HomeScreen() {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#ece9f7' }}>
+            <View style={{ alignItems: 'center', marginVertical: 12 }}>
+               <TouchableOpacity style={styles.refreshBtn} onPress={() => { 
+    console.log('Atualizar pressionado'); 
+    refetch(); 
+}}>
+    <Text style={{ color: '#fff', fontWeight: 'bold', fontSize: 16 }}>🔄 Atualizar</Text>
+</TouchableOpacity>
+            </View>
             <FlatList
                 data={data}
                 refreshing={isFetching}
@@ -86,5 +96,13 @@ const styles = StyleSheet.create({
     value: {
         fontWeight: '400',
         color: '#f8f9fa'
+    },
+    refreshBtn: {
+        backgroundColor: '#4e54c8',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 8,
+        marginBottom: 8,
+        alignItems: 'center'
     }
 })
